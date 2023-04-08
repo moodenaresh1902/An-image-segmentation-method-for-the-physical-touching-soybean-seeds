@@ -30,7 +30,8 @@ Note：if you use Linux Version, you need recompile main.cpp.
  ./src: there are 2 images of the physical touching soybean seeds for testing this algorithm.
 
 
-## path.txt: is used to save images' name. In path.txt, those images would be addressed by this algorithm.
+## 
+path.txt: is used to save images' name. In path.txt, those images would be addressed by this algorithm.
 
 Example path.txt:
 Image_20220426214755980
