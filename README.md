@@ -1,5 +1,5 @@
 # An-image-segmentation-method-for-the-physical-touching-soybean-seeds
-This algorithm is designed for create individual soybean seed images (227*227 pixels) from the images of the physical touching soybean seeds (3072*2048 pixels).
+This algorithm is designed for create individual soybean seed images (227x227 pixels) from the images of the physical touching soybean seeds (3072x2048 pixels).
 
 **03.04.2023**
 
