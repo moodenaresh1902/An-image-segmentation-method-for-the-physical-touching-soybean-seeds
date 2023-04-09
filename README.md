@@ -3,7 +3,7 @@ This algorithm is designed for create individual soybean seed images (227x227 pi
 
 **03.04.2023**
 
-Note：if you use Linux Version, you need recompile main.cpp.
+Note：main.cpp should be recompiled. 
 
 ## Requirements
 
