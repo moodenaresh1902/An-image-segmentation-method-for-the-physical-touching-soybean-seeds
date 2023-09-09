@@ -3,7 +3,6 @@
 #include <string>
 using namespace std;
 
-
 string create_path(int number, string file_path, string image_format,string image_type)
 {
 	string image_file_path;
