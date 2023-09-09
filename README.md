@@ -7,7 +7,7 @@ Note：main.cpp should be recompiled.
 
 ## Requirements
 
-- C++
+- C/C++
 - OpenCV Library(3.4.8)
 
 ## Operating environments and dependencies
