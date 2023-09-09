@@ -3,14 +3,14 @@
 #include "MSRCR.h"
 
 /*===========================================================
- * º¯Êı: CreateKernel
- * ËµÃ÷£º´´½¨Ò»¸ö±ê×¼»¯µÄÒ»Î¬¸ßË¹ºË£»
- * ²ÎÊı£º
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
- * ·µ»ØÖµ£º
- *   double*: ³¤¶ÈÎª((6*sigma)/2) * 2 + 1µÄdoubleÊı×é
- * ×¢£º
- *   µ÷ÓÃÕßĞèÒªÉ¾³ı¸ÃÄÚºË£»
+ * å‡½æ•°: CreateKernel
+ * è¯´æ˜ï¼šåˆ›å»ºä¸€ä¸ªæ ‡å‡†åŒ–çš„ä¸€ç»´é«˜æ–¯æ ¸ï¼›
+ * å‚æ•°ï¼š
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ * è¿”å›å€¼ï¼š
+ *   double*: é•¿åº¦ä¸º((6*sigma)/2) * 2 + 1çš„doubleæ•°ç»„
+ * æ³¨ï¼š
+ *   è°ƒç”¨è€…éœ€è¦åˆ é™¤è¯¥å†…æ ¸ï¼›
  * --------------------------------------------------------
  *  Summary:
  *  Creates a normalized 1 dimensional gaussian kernel.
@@ -31,16 +31,16 @@ vector<double> Msrcr::CreateKernel(double sigma)
 	double sum;
 
 	// set sigma's upline
-	// ÎªsigmaÉè¶¨ÉÏÏŞ
+	// ä¸ºsigmaè®¾å®šä¸Šé™
 	if (sigma > 300) sigma = 300;
 
 	// get needed filter size (enforce oddness)
-	// »ñÈ¡ĞèÒªµÄÂË²¨³ß´ç£¬ÇÒÇ¿ÖÆÎªÆæÊı£»
+	// è·å–éœ€è¦çš„æ»¤æ³¢å°ºå¯¸ï¼Œä¸”å¼ºåˆ¶ä¸ºå¥‡æ•°ï¼›
 	filter_size = (int)floor(sigma * 6) / 2;
 	filter_size = filter_size * 2 + 1;
 
 	// Calculate exponential
-	// ¼ÆËãÖ¸Êı
+	// è®¡ç®—æŒ‡æ•°
 	sum = 0;
 	for (i = 0; i < filter_size; i++)
 	{
@@ -53,7 +53,7 @@ vector<double> Msrcr::CreateKernel(double sigma)
 	}
 
 	// Normalize
-	// ¹éÒ»»¯¼ÆËã
+	// å½’ä¸€åŒ–è®¡ç®—
 	for (i = 0, x; i < filter_size; i++)
 		filter[i] /= sum;
 
@@ -61,14 +61,14 @@ vector<double> Msrcr::CreateKernel(double sigma)
 }
 
 /*===========================================================
- * º¯Êı: CreateFastKernel
- * ËµÃ÷£º´´½¨Ò»¸ö½üËÆ¸¡µãµÄÕûÊıÀàĞÍ£¨×óÒÆ8bits£©µÄ¿ìËÙ¸ßË¹ºË£»
- * ²ÎÊı£º
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
- * ·µ»ØÖµ£º
- *   double*: ³¤¶ÈÎª((6*sigma)/2) * 2 + 1µÄintÊı×é
- * ×¢£º
- *   µ÷ÓÃÕßĞèÒªÉ¾³ı¸ÃÄÚºË£»
+ * å‡½æ•°: CreateFastKernel
+ * è¯´æ˜ï¼šåˆ›å»ºä¸€ä¸ªè¿‘ä¼¼æµ®ç‚¹çš„æ•´æ•°ç±»å‹ï¼ˆå·¦ç§»8bitsï¼‰çš„å¿«é€Ÿé«˜æ–¯æ ¸ï¼›
+ * å‚æ•°ï¼š
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ * è¿”å›å€¼ï¼š
+ *   double*: é•¿åº¦ä¸º((6*sigma)/2) * 2 + 1çš„intæ•°ç»„
+ * æ³¨ï¼š
+ *   è°ƒç”¨è€…éœ€è¦åˆ é™¤è¯¥å†…æ ¸ï¼›
  * --------------------------------------------------------
  * Summary:
  * Creates a faster gaussian kernal using integers that
@@ -91,20 +91,20 @@ vector<int> Msrcr::CreateFastKernel(double sigma)
 	int i, filter_size;
 
 	// Reject unreasonable demands
-	// ÉèÖÃÉÏÏŞ
+	// è®¾ç½®ä¸Šé™
 	if (sigma > 300) sigma = 300;
 
 	// get needed filter size (enforce oddness)
-	// »ñÈ¡ĞèÒªµÄÂË²¨³ß´ç£¬ÇÒÇ¿ÖÆÎªÆæÊı£»
+	// è·å–éœ€è¦çš„æ»¤æ³¢å°ºå¯¸ï¼Œä¸”å¼ºåˆ¶ä¸ºå¥‡æ•°ï¼›
 	filter_size = (int)floor(sigma * 6) / 2;
 	filter_size = filter_size * 2 + 1;
 
 	// Create Kernel
-	// ´´½¨ÄÚºË
+	// åˆ›å»ºå†…æ ¸
 	fp_kernel = CreateKernel(sigma);
 
 	// Change kernel's data type from double to int
-	// doubleÄÚºË×ªÎªintĞÍ
+	// doubleå†…æ ¸è½¬ä¸ºintå‹
 	for (i = 0; i < filter_size; i++)
 	{
 		int tmpValue;
@@ -116,11 +116,11 @@ vector<int> Msrcr::CreateFastKernel(double sigma)
 }
 
 /*===========================================================
- * º¯Êı£ºFilterGaussian
- * ËµÃ÷£ºÍ¨¹ıÄÚºË¼ÆËã¸ßË¹¾í»ı£¬ÄÚºËÓÉsigmaÖµµÃµ½£¬ÇÒÔÚÄÚºËÁ½¶ËÖµÏàµÈ£»
- * ²ÎÊı£º
- *   img: ±»ÂË²¨µÄIplImage*ÀàĞÍÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
+ * å‡½æ•°ï¼šFilterGaussian
+ * è¯´æ˜ï¼šé€šè¿‡å†…æ ¸è®¡ç®—é«˜æ–¯å·ç§¯ï¼Œå†…æ ¸ç”±sigmaå€¼å¾—åˆ°ï¼Œä¸”åœ¨å†…æ ¸ä¸¤ç«¯å€¼ç›¸ç­‰ï¼›
+ * å‚æ•°ï¼š
+ *   img: è¢«æ»¤æ³¢çš„IplImage*ç±»å‹å›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
  * --------------------------------------------------------
  * Summary:
  * Performs a gaussian convolution for a value of sigma that is equal
@@ -139,28 +139,28 @@ void Msrcr::FilterGaussian(IplImage* img, double sigma)
 	int v1, v2, v3;
 
 	// Reject unreasonable demands
-	// ÉèÖÃÉÏÏŞ
+	// è®¾ç½®ä¸Šé™
 	if (sigma > 300) sigma = 300;
 
 	// get needed filter size (enforce oddness)
-	// »ñÈ¡ĞèÒªµÄÂË²¨³ß´ç£¬ÇÒÇ¿ÖÆÎªÆæÊı£»
+	// è·å–éœ€è¦çš„æ»¤æ³¢å°ºå¯¸ï¼Œä¸”å¼ºåˆ¶ä¸ºå¥‡æ•°ï¼›
 	filter_size = (int)floor(sigma * 6) / 2;
 	filter_size = filter_size * 2 + 1;
 
 	// Create Kernel
-	// ´´½¨ÄÚºË
+	// åˆ›å»ºå†…æ ¸
 	kernel = CreateFastKernel(sigma);
 
 	temp = cvCreateImage(cvSize(img->width, img->height), img->depth, img->nChannels);
 
 	// filter x axis
-	// XÖáÂË²¨
+	// Xè½´æ»¤æ³¢
 	for (j = 0; j < temp->height; j++)
 	{
 		for (i = 0; i < temp->width; i++)
 		{
 			// inner loop has been unrolled
-			// ÄÚ²ãÑ­»·ÒÑ¾­Õ¹¿ª
+			// å†…å±‚å¾ªç¯å·²ç»å±•å¼€
 			v1 = v2 = v3 = 0;
 			for (k = 0; k < filter_size; k++)
 			{
@@ -185,7 +185,7 @@ void Msrcr::FilterGaussian(IplImage* img, double sigma)
 	}
 
 	// filter y axis
-	// YÖáÂË²¨
+	// Yè½´æ»¤æ³¢
 	for (j = 0; j < img->height; j++)
 	{
 		for (i = 0; i < img->width; i++)
@@ -217,12 +217,12 @@ void Msrcr::FilterGaussian(IplImage* img, double sigma)
 }
 
 /*===========================================================
- * º¯Êı£ºFilterGaussian
- * ËµÃ÷£ºÍ¨¹ıÄÚºË¼ÆËã¸ßË¹¾í»ı£¬ÄÚºËÓÉsigmaÖµµÃµ½£¬ÇÒÔÚÄÚºËÁ½¶ËÖµÏàµÈ£»
- * ²ÎÊı£º
- *   Mat src: ÊäÈëÍ¼Ïñ
- *   Mat &dst: Êä³öÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
+ * å‡½æ•°ï¼šFilterGaussian
+ * è¯´æ˜ï¼šé€šè¿‡å†…æ ¸è®¡ç®—é«˜æ–¯å·ç§¯ï¼Œå†…æ ¸ç”±sigmaå€¼å¾—åˆ°ï¼Œä¸”åœ¨å†…æ ¸ä¸¤ç«¯å€¼ç›¸ç­‰ï¼›
+ * å‚æ•°ï¼š
+ *   Mat src: è¾“å…¥å›¾åƒ
+ *   Mat &dst: è¾“å‡ºå›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
  * --------------------------------------------------------
  * Summary:
  * Performs a gaussian convolution for a value of sigma that is equal
@@ -237,17 +237,17 @@ void Msrcr::FilterGaussian(IplImage* img, double sigma)
 void Msrcr::FilterGaussian(Mat src, Mat &dst, double sigma)
 {
 	IplImage tmp_ipl;
-	tmp_ipl = IplImage(src);
+	tmp_ipl = cvIplImage(src);
 	FilterGaussian(&tmp_ipl, sigma);
 	dst = cvarrToMat(&tmp_ipl);
 }
 
 /*===========================================================
- * º¯Êı£ºFastFilter
- * ËµÃ÷£º¸ø³öÈÎÒâ´óĞ¡µÄsigmaÖµ£¬¶¼¿ÉÒÔÍ¨¹ıÊ¹ÓÃÍ¼Ïñ½ğ×ÖËşÓë¿É·ÖÀëÂË²¨Æ÷¼ÆËã¸ßË¹¾í»ı£»
- * ²ÎÊı£º
- *   IplImage *img: ±»ÂË²¨µÄÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
+ * å‡½æ•°ï¼šFastFilter
+ * è¯´æ˜ï¼šç»™å‡ºä»»æ„å¤§å°çš„sigmaå€¼ï¼Œéƒ½å¯ä»¥é€šè¿‡ä½¿ç”¨å›¾åƒé‡‘å­—å¡”ä¸å¯åˆ†ç¦»æ»¤æ³¢å™¨è®¡ç®—é«˜æ–¯å·ç§¯ï¼›
+ * å‚æ•°ï¼š
+ *   IplImage *img: è¢«æ»¤æ³¢çš„å›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
  * --------------------------------------------------------
  * Summary:
  * Performs gaussian convolution of any size sigma very fast by using
@@ -263,20 +263,20 @@ void Msrcr::FastFilter(IplImage *img, double sigma)
 	int filter_size;
 
 	// Reject unreasonable demands
-	// ÉèÖÃÉÏÏŞ
+	// è®¾ç½®ä¸Šé™
 	if (sigma > 300) sigma = 300;
 
 	// get needed filter size (enforce oddness)
-	// »ñÈ¡ĞèÒªµÄÂË²¨³ß´ç£¬ÇÒÇ¿ÖÆÎªÆæÊı£»
+	// è·å–éœ€è¦çš„æ»¤æ³¢å°ºå¯¸ï¼Œä¸”å¼ºåˆ¶ä¸ºå¥‡æ•°ï¼›
 	filter_size = (int)floor(sigma * 6) / 2;
 	filter_size = filter_size * 2 + 1;
 
 	// If 3 sigma is less than a pixel, why bother (ie sigma < 2/3)
-	// Èç¹û3 * sigmaĞ¡ÓÚÒ»¸öÏñËØ£¬ÔòÖ±½ÓÍË³ö
+	// å¦‚æœ3 * sigmaå°äºä¸€ä¸ªåƒç´ ï¼Œåˆ™ç›´æ¥é€€å‡º
 	if (filter_size < 3) return;
 
 	// Filter, or downsample and recurse
-	// ´¦Àí·½Ê½£º(1) ÂË²¨  (2) ¸ßË¹¹â»¬´¦Àí  (3) µİ¹é´¦ÀíÂË²¨Æ÷´óĞ¡
+	// å¤„ç†æ–¹å¼ï¼š(1) æ»¤æ³¢  (2) é«˜æ–¯å…‰æ»‘å¤„ç†  (3) é€’å½’å¤„ç†æ»¤æ³¢å™¨å¤§å°
 	if (filter_size < 10) {
 
 #ifdef USE_EXACT_SIGMA
@@ -298,12 +298,12 @@ void Msrcr::FastFilter(IplImage *img, double sigma)
 }
 
 /*===========================================================
- * º¯Êı£ºFastFilter
- * ËµÃ÷£º¸ø³öÈÎÒâ´óĞ¡µÄsigmaÖµ£¬¶¼¿ÉÒÔÍ¨¹ıÊ¹ÓÃÍ¼Ïñ½ğ×ÖËşÓë¿É·ÖÀëÂË²¨Æ÷¼ÆËã¸ßË¹¾í»ı£»
- * ²ÎÊı£º
- *   Mat src: ÊäÈëÍ¼Ïñ
- *   Mat &dst: Êä³öÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
+ * å‡½æ•°ï¼šFastFilter
+ * è¯´æ˜ï¼šç»™å‡ºä»»æ„å¤§å°çš„sigmaå€¼ï¼Œéƒ½å¯ä»¥é€šè¿‡ä½¿ç”¨å›¾åƒé‡‘å­—å¡”ä¸å¯åˆ†ç¦»æ»¤æ³¢å™¨è®¡ç®—é«˜æ–¯å·ç§¯ï¼›
+ * å‚æ•°ï¼š
+ *   Mat src: è¾“å…¥å›¾åƒ
+ *   Mat &dst: è¾“å‡ºå›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
  * --------------------------------------------------------
  * Summary:
  * Performs gaussian convolution of any size sigma very fast by using
@@ -318,20 +318,20 @@ void Msrcr::FastFilter(IplImage *img, double sigma)
 void Msrcr::FastFilter(Mat src, Mat &dst, double sigma)
 {
 	IplImage tmp_ipl;
-	tmp_ipl = IplImage(src);
+	tmp_ipl = cvIplImage(src);
 	FastFilter(&tmp_ipl, sigma);
 	dst = cvarrToMat(&tmp_ipl);
 }
 
 /*===========================================================
- * º¯Êı£ºRetinex
- * ËµÃ÷£ºµ¥Í¨µÀSSR·½·¨£¬»ù´¡Retinex¸´Ô­Ëã·¨¡£Ô­Í¼ÏñºÍ±»ÂË²¨µÄÍ¼ÏñĞèÒª±»×ª»»µ½
- *   ¶ÔÊıÓò£¬²¢×ö¼õÔËËã£»
- * ²ÎÊı£º
- *   IplImage *img: ±»ÂË²¨µÄÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
- *   int gain: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÔöÒæ
- *   int offset: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÆ«ÒÆÁ¿
+ * å‡½æ•°ï¼šRetinex
+ * è¯´æ˜ï¼šå•é€šé“SSRæ–¹æ³•ï¼ŒåŸºç¡€Retinexå¤åŸç®—æ³•ã€‚åŸå›¾åƒå’Œè¢«æ»¤æ³¢çš„å›¾åƒéœ€è¦è¢«è½¬æ¢åˆ°
+ *   å¯¹æ•°åŸŸï¼Œå¹¶åšå‡è¿ç®—ï¼›
+ * å‚æ•°ï¼š
+ *   IplImage *img: è¢«æ»¤æ³¢çš„å›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ *   int gain: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„å¢ç›Š
+ *   int offset: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„åç§»é‡
  * --------------------------------------------------------
  * Summary:
  * Basic retinex restoration. The image and a filtered image are converted
@@ -349,33 +349,33 @@ void Msrcr::Retinex(IplImage *img, double sigma, int gain, int offset)
 	IplImage *A, *fA, *fB, *fC;
 
 	// Initialize temp images
-	// ³õÊ¼»¯»º´æÍ¼Ïñ
+	// åˆå§‹åŒ–ç¼“å­˜å›¾åƒ
 	fA = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, img->nChannels);
 	fB = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, img->nChannels);
 	fC = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, img->nChannels);
 
 	// Compute log image
-	// ¼ÆËã¶ÔÊıÍ¼Ïñ
+	// è®¡ç®—å¯¹æ•°å›¾åƒ
 	cvConvert(img, fA);
 	cvLog(fA, fB);
 
 	// Compute log of blured image
-	// ¼ÆËãÂË²¨ºóÄ£ºıÍ¼ÏñµÄ¶ÔÊıÍ¼Ïñ
+	// è®¡ç®—æ»¤æ³¢åæ¨¡ç³Šå›¾åƒçš„å¯¹æ•°å›¾åƒ
 	A = cvCloneImage(img);
 	FastFilter(A, sigma);
 	cvConvert(A, fA);
 	cvLog(fA, fC);
 
 	// Compute difference
-	// ¼ÆËãÁ½Í¼ÏñÖ®²î
+	// è®¡ç®—ä¸¤å›¾åƒä¹‹å·®
 	cvSub(fB, fC, fA);
 
 	// Restore
-	// »Ö¸´Í¼Ïñ
+	// æ¢å¤å›¾åƒ
 	cvConvertScale(fA, img, gain, offset);
 
 	// Release temp images
-	// ÊÍ·Å»º´æÍ¼Ïñ
+	// é‡Šæ”¾ç¼“å­˜å›¾åƒ
 	cvReleaseImage(&A);
 	cvReleaseImage(&fA);
 	cvReleaseImage(&fB);
@@ -384,15 +384,15 @@ void Msrcr::Retinex(IplImage *img, double sigma, int gain, int offset)
 }
 
 /*===========================================================
- * º¯Êı£ºRetinex
- * ËµÃ÷£ºµ¥Í¨µÀSSR·½·¨£¬»ù´¡Retinex¸´Ô­Ëã·¨¡£Ô­Í¼ÏñºÍ±»ÂË²¨µÄÍ¼ÏñĞèÒª±»×ª»»µ½
- *   ¶ÔÊıÓò£¬²¢×ö¼õÔËËã£»
- * ²ÎÊı£º
- *   Mat src: ÊäÈëÍ¼Ïñ
- *   Mat &dst: Êä³öÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
- *   int gain: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÔöÒæ
- *   int offset: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÆ«ÒÆÁ¿
+ * å‡½æ•°ï¼šRetinex
+ * è¯´æ˜ï¼šå•é€šé“SSRæ–¹æ³•ï¼ŒåŸºç¡€Retinexå¤åŸç®—æ³•ã€‚åŸå›¾åƒå’Œè¢«æ»¤æ³¢çš„å›¾åƒéœ€è¦è¢«è½¬æ¢åˆ°
+ *   å¯¹æ•°åŸŸï¼Œå¹¶åšå‡è¿ç®—ï¼›
+ * å‚æ•°ï¼š
+ *   Mat src: è¾“å…¥å›¾åƒ
+ *   Mat &dst: è¾“å‡ºå›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ *   int gain: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„å¢ç›Š
+ *   int offset: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„åç§»é‡
  * --------------------------------------------------------
  * Summary:
  * Basic retinex restoration. The image and a filtered image are converted
@@ -409,22 +409,22 @@ void Msrcr::Retinex(IplImage *img, double sigma, int gain, int offset)
 void Msrcr::Retinex(Mat src, Mat &dst, double sigma, int gain, int offset)
 {
 	IplImage tmp_ipl;
-	tmp_ipl = IplImage(src);
+	tmp_ipl = cvIplImage(src);
 	Retinex(&tmp_ipl, sigma, gain, offset);
 	dst = cvarrToMat(&tmp_ipl);
 }
 
 /*===========================================================
- * º¯Êı£ºMultiScaleRetinex
- * ËµÃ÷£º¶àÍ¨µÀMSRËã·¨¡£Ô­Í¼ÏñºÍÒ»ÏµÁĞ±»ÂË²¨µÄÍ¼Ïñ×ª»»µ½¶ÔÊıÓò£¬²¢Óë´øÈ¨ÖØµÄÔ­Í¼Ïñ×ö¼õÔËËã¡£
- * Í¨³£Çé¿öÏÂ£¬Èı¸öÈ¨ÖØ·¶Î§Ñ¡ÔñµÍ¡¢ÖĞ¡¢¸ß±ê×¼Æ«²î£»
+ * å‡½æ•°ï¼šMultiScaleRetinex
+ * è¯´æ˜ï¼šå¤šé€šé“MSRç®—æ³•ã€‚åŸå›¾åƒå’Œä¸€ç³»åˆ—è¢«æ»¤æ³¢çš„å›¾åƒè½¬æ¢åˆ°å¯¹æ•°åŸŸï¼Œå¹¶ä¸å¸¦æƒé‡çš„åŸå›¾åƒåšå‡è¿ç®—ã€‚
+ * é€šå¸¸æƒ…å†µä¸‹ï¼Œä¸‰ä¸ªæƒé‡èŒƒå›´é€‰æ‹©ä½ã€ä¸­ã€é«˜æ ‡å‡†åå·®ï¼›
  *
- * ²ÎÊı£º
- *   IplImage *img: ±»ÂË²¨µÄÍ¼Ïñ
- *   vector<double> weights: Í¨µÀÈ¨ÖØ
- *   vector<double> sigmas: ¸ßË¹ºË±ê×¼Æ«²î
- *   int gain: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÔöÒæ
- *   int offset: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÆ«ÒÆÁ¿
+ * å‚æ•°ï¼š
+ *   IplImage *img: è¢«æ»¤æ³¢çš„å›¾åƒ
+ *   vector<double> weights: é€šé“æƒé‡
+ *   vector<double> sigmas: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ *   int gain: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„å¢ç›Š
+ *   int offset: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„åç§»é‡
  * --------------------------------------------------------
  * Summary:
  * Multiscale retinex restoration.  The image and a set of filtered images are
@@ -489,17 +489,17 @@ void Msrcr::MultiScaleRetinex(IplImage *img, vector<double> weights, vector<doub
 }
 
 /*===========================================================
- * º¯Êı£ºMultiScaleRetinex
- * ËµÃ÷£º¶àÍ¨µÀMSRËã·¨¡£Ô­Í¼ÏñºÍÒ»ÏµÁĞ±»ÂË²¨µÄÍ¼Ïñ×ª»»µ½¶ÔÊıÓò£¬²¢Óë´øÈ¨ÖØµÄÔ­Í¼Ïñ×ö¼õÔËËã¡£
- * Í¨³£Çé¿öÏÂ£¬Èı¸öÈ¨ÖØ·¶Î§Ñ¡ÔñµÍ¡¢ÖĞ¡¢¸ß±ê×¼Æ«²î£»
+ * å‡½æ•°ï¼šMultiScaleRetinex
+ * è¯´æ˜ï¼šå¤šé€šé“MSRç®—æ³•ã€‚åŸå›¾åƒå’Œä¸€ç³»åˆ—è¢«æ»¤æ³¢çš„å›¾åƒè½¬æ¢åˆ°å¯¹æ•°åŸŸï¼Œå¹¶ä¸å¸¦æƒé‡çš„åŸå›¾åƒåšå‡è¿ç®—ã€‚
+ * é€šå¸¸æƒ…å†µä¸‹ï¼Œä¸‰ä¸ªæƒé‡èŒƒå›´é€‰æ‹©ä½ã€ä¸­ã€é«˜æ ‡å‡†åå·®ï¼›
  *
- * ²ÎÊı£º
- *   Mat src: ÊäÈëÍ¼Ïñ
- *   Mat &dst: Êä³öÍ¼Ïñ
- *   vector<double> weights: Í¨µÀÈ¨ÖØ
- *   vector<double> sigmas: ¸ßË¹ºË±ê×¼Æ«²î
- *   int gain: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÔöÒæ
- *   int offset: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÆ«ÒÆÁ¿
+ * å‚æ•°ï¼š
+ *   Mat src: è¾“å…¥å›¾åƒ
+ *   Mat &dst: è¾“å‡ºå›¾åƒ
+ *   vector<double> weights: é€šé“æƒé‡
+ *   vector<double> sigmas: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ *   int gain: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„å¢ç›Š
+ *   int offset: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„åç§»é‡
  * --------------------------------------------------------
  * Summary:
  * Multiscale retinex restoration.  The image and a set of filtered images are
@@ -519,23 +519,23 @@ void Msrcr::MultiScaleRetinex(IplImage *img, vector<double> weights, vector<doub
 void Msrcr::MultiScaleRetinex(Mat src, Mat &dst, vector<double> weights, vector<double> sigmas, int gain, int offset)
 {
 	IplImage tmp_ipl;
-	tmp_ipl = IplImage(src);
+	tmp_ipl = cvIplImage(src);
 	MultiScaleRetinex(&tmp_ipl, weights, sigmas, gain, offset);
 	dst = cvarrToMat(&tmp_ipl);
 }
 
 /*===========================================================
- * º¯Êı£ºMultiScaleRetinexCR
- * ËµÃ÷£ºMSRCRËã·¨£¬MSRËã·¨¼ÓÉÏÑÕÉ«ĞŞ¸´¡£Ô­Í¼ÏñºÍÒ»ÏµÁĞ±»ÂË²¨µÄÍ¼Ïñ×ª»»µ½¶ÔÊıÓò£¬²¢Óë´øÈ¨ÖØµÄÔ­Í¼Ïñ×ö¼õÔËËã¡£
- * Í¨³£Çé¿öÏÂ£¬Èı¸öÈ¨ÖØ·¶Î§Ñ¡ÔñµÍ¡¢ÖĞ¡¢¸ß±ê×¼Æ«²î£»Ö®ºó£¬ÑÕÉ«ĞŞ¸´È¨ÖØÓ¦ÓÃÓÚÃ¿¸öÑÕÉ«Í¨µÀÖĞ£»
+ * å‡½æ•°ï¼šMultiScaleRetinexCR
+ * è¯´æ˜ï¼šMSRCRç®—æ³•ï¼ŒMSRç®—æ³•åŠ ä¸Šé¢œè‰²ä¿®å¤ã€‚åŸå›¾åƒå’Œä¸€ç³»åˆ—è¢«æ»¤æ³¢çš„å›¾åƒè½¬æ¢åˆ°å¯¹æ•°åŸŸï¼Œå¹¶ä¸å¸¦æƒé‡çš„åŸå›¾åƒåšå‡è¿ç®—ã€‚
+ * é€šå¸¸æƒ…å†µä¸‹ï¼Œä¸‰ä¸ªæƒé‡èŒƒå›´é€‰æ‹©ä½ã€ä¸­ã€é«˜æ ‡å‡†åå·®ï¼›ä¹‹åï¼Œé¢œè‰²ä¿®å¤æƒé‡åº”ç”¨äºæ¯ä¸ªé¢œè‰²é€šé“ä¸­ï¼›
  *
- * ²ÎÊı£º
- *   IplImage *img: ±»ÂË²¨µÄÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
- *   int gain: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÔöÒæ
- *   int offset: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÆ«ÒÆÁ¿
- *   double restoration_factor: ¿ØÖÆÑÕÉ«ĞŞ¸´µÄ·ÇÏßĞÔ
- *   double color_gain: ¿ØÖÆÑÕÉ«ĞŞ¸´ÔöÒæ
+ * å‚æ•°ï¼š
+ *   IplImage *img: è¢«æ»¤æ³¢çš„å›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ *   int gain: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„å¢ç›Š
+ *   int offset: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„åç§»é‡
+ *   double restoration_factor: æ§åˆ¶é¢œè‰²ä¿®å¤çš„éçº¿æ€§
+ *   double color_gain: æ§åˆ¶é¢œè‰²ä¿®å¤å¢ç›Š
  * --------------------------------------------------------
  * Summary:
  * Multiscale retinex restoration with color restoration.  The image and a set of
@@ -557,13 +557,16 @@ void Msrcr::MultiScaleRetinexCR(IplImage *img, vector<double> weights, vector<do
 	int gain, int offset, double restoration_factor, double color_gain)
 
 {
+	double rate;
+
+
 	int i;
 	double weight;
 	int scales = sigmas.size();
-	IplImage *A, *B, *C, *fA, *fB, *fC, *fsA, *fsB, *fsC, *fsD, *fsE, *fsF;
+	IplImage *A, *B, *C, *fA, *fB, *fC, *fsA, *fsB, *fsC, *fsD, *fsE, *fsF,  *ImgGray;
 
 	// Initialize temp images
-	// ³õÊ¼»¯»º´æÍ¼Ïñ
+	// åˆå§‹åŒ–ç¼“å­˜å›¾åƒ
 	fA = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, img->nChannels);
 	fB = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, img->nChannels);
 	fC = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, img->nChannels);
@@ -573,44 +576,70 @@ void Msrcr::MultiScaleRetinexCR(IplImage *img, vector<double> weights, vector<do
 	fsD = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, 1);
 	fsE = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, 1);
 	fsF = cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, 1);
+        ImgGray= cvCreateImage(cvSize(img->width, img->height), IPL_DEPTH_32F, 1);
+
+
 
 	// Compute log image
-	// ¼ÆËã¶ÔÊıÍ¼Ïñ
-	cvConvert(img, fB);
-	cvLog(fB, fA);
+	// è®¡ç®—å¯¹æ•°å›¾åƒ
+	cvConvert(img, fB);//ç”¨äºå›¾åƒå’ŒçŸ©é˜µä¹‹é—´çš„ç›¸äº’è½¬æ¢ã€‚
+	cvLog(fB, fA);//å¯¹æ•°è½¬æ¢
 
 	// Normalize according to given weights
-	// ÒÀÕÕÈ¨ÖØ¹éÒ»»¯
+	// ä¾ç…§æƒé‡å½’ä¸€åŒ–
 	for (i = 0, weight = 0; i < scales; i++)
 		weight += weights[i];
 
-	if (weight != 1.0) cvScale(fA, fA, weight);
+	/*cout << "############" << endl;
+	cout << weight << endl;*/
+
+	if (weight != 1.0) cvScale(fA, fA, weight);//fAç¼©å°ä¸ºåŸæ¥çš„1
+	
+	
 
 	// Filter at each scale
-	// ¸÷³ß¶ÈÉÏ½øĞĞÂË²¨²Ù×÷
+	// å„å°ºåº¦ä¸Šè¿›è¡Œæ»¤æ³¢æ“ä½œ
 	for (i = 0; i < scales; i++) {
 		A = cvCloneImage(img);
+
 		FastFilter(A, sigmas[i]);
+		//cout << sigmas[i] << endl;
 
 		cvConvert(A, fB);
 		cvLog(fB, fC);
 		cvReleaseImage(&A);
 
 		// Compute weighted difference
-		// ¼ÆËãÈ¨ÖØºóÁ½Í¼ÏñÖ®²î
+		// è®¡ç®—æƒé‡åä¸¤å›¾åƒä¹‹å·®
 		cvScale(fC, fC, weights[i]);
+
 		cvSub(fA, fC, fA);
+
 	}
+	/*cvConvertScale(fA, fA, 110, 110);//img=110*fA+110
+
+	cv::Mat m0 = cv::cvarrToMat(fA);
+	
+	cv::imwrite("D://VS_Project//14.bmp", m0);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+
+    cvConvertScale(fC, fC, 110, 110);//img=110*fA+110
+	cv::Mat m2 = cv::cvarrToMat(fC);
+	
+	cv::imwrite("D://VS_Project//15.bmp", m2);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+
+	system("pause");*/
+
+	//cvConvertScale(fA, img, 110, 110);//img=110*fA+110
 
 	// Color restoration
-	// ÑÕÉ«ĞŞ¸´
+	// é¢œè‰²ä¿®å¤
 	if (img->nChannels > 1) {
 		A = cvCreateImage(cvSize(img->width, img->height), img->depth, 1);
 		B = cvCreateImage(cvSize(img->width, img->height), img->depth, 1);
 		C = cvCreateImage(cvSize(img->width, img->height), img->depth, 1);
 
 		// Divide image into channels, convert and store sum
-		// ½«Í¼Ïñ·Ö¸îÎªÈô¸ÉÍ¨µÀ£¬ÀàĞÍ×ª»»Îª¸¡µãĞÍ£¬²¢´æ´¢Í¨µÀÊı¾İÖ®ºÍ
+		// å°†å›¾åƒåˆ†å‰²ä¸ºè‹¥å¹²é€šé“ï¼Œç±»å‹è½¬æ¢ä¸ºæµ®ç‚¹å‹ï¼Œå¹¶å­˜å‚¨é€šé“æ•°æ®ä¹‹å’Œ
 		cvSplit(img, A, B, C, NULL);
 		cvConvert(A, fsA);
 		cvConvert(B, fsB);
@@ -621,28 +650,99 @@ void Msrcr::MultiScaleRetinexCR(IplImage *img, vector<double> weights, vector<do
 		cvReleaseImage(&C);
 
 		// Sum components
-		// ÇóºÍ
+		// æ±‚å’Œ
 		cvAdd(fsA, fsB, fsD);
+
+		/*cv::Mat m2 = cv::cvarrToMat(fsD);
+
+		cv::imwrite("D://VS_Project//15.bmp", m2);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°*/
+
 		cvAdd(fsD, fsC, fsD);
 
+
+                //cvCvtColor(fsD,ImgGray,CV_BGR2GRAY);
+                //cv::Mat src_gray = cv::cvarrToMat(ImgGray);
+
+		cv::Mat m3 = cv::cvarrToMat(fsD);
+
+		cv::imwrite("/opt/MVS/Data/16.bmp", m3);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+		m3 = imread("/opt/MVS/Data/16.bmp");
+		Mat  src_gray;
+		cvtColor(m3, src_gray, CV_BGR2GRAY);
+		//Mat binary_output;
+		//threshold(src_gray, binary_output, 0, 255, THRESH_OTSU);
+		//imwrite("D://VS_Project//17.bmp", binary_output);
+
+		//hist_(src_gray);
+
+		//drawHistogram(src_gray);
+		//system("pause");
+
+		double count_255 = 0;
+		for (int row = 0; row < img->height; row++)
+		{
+			for (int col = 0; col < img->width; col++)
+			{
+				if (src_gray.at<uchar>(row, col) ==255)
+				{
+					count_255 += 1;
+				}
+
+			}
+		}
+		rate = count_255 / 6291456;
+		//cout << count_255 << endl;
+		cout << rate << endl;
+
+
+		//cvThreshold(fsD, fsD, 100, 255, CV_THRESH_BINARY);
+
 		// Normalize weights
-		// ´øÈ¨ÖØ¾ØÕó¹éÒ»»¯
+		// å¸¦æƒé‡çŸ©é˜µå½’ä¸€åŒ–
 		cvDiv(fsA, fsD, fsA, restoration_factor);
+		/*cvConvertScale(fsA, fsA, 50, 110);
+		cv::Mat m4 = cv::cvarrToMat(fsA);
+		cv::imwrite("D://VS_Project//fsA.bmp", m4);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+		*/
 		cvDiv(fsB, fsD, fsB, restoration_factor);
+		/*cvConvertScale(fsB, fsB, 50, 110);
+		cv::Mat m5 = cv::cvarrToMat(fsB);
+		cv::imwrite("D://VS_Project//fsB.bmp", m5);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+		*/
 		cvDiv(fsC, fsD, fsC, restoration_factor);
-
+		/*cvConvertScale(fsC, fsC, 50, 110);
+		cv::Mat m6 = cv::cvarrToMat(fsC);
+		cv::imwrite("D://VS_Project//fsC.bmp", m6);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+		*/
 		cvConvertScale(fsA, fsA, 1, 1);
+		/*cv::Mat m4 = cv::cvarrToMat(fsA);
+		cv::imwrite("D://VS_Project//fsA.bmp", m4);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+		*/
 		cvConvertScale(fsB, fsB, 1, 1);
+		/*cv::Mat m5 = cv::cvarrToMat(fsB);
+		cv::imwrite("D://VS_Project//fsB.bmp", m5);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+		*/
 		cvConvertScale(fsC, fsC, 1, 1);
-
+		//cv::Mat m6 = cv::cvarrToMat(fsC);
+		//cv::imwrite("D://VS_Project//fsC.bmp", m6);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+		
+		
 		// Log weights
-		// ´øÈ¨ÖØ¾ØÕóÇó¶ÔÊı
-		cvLog(fsA, fsA);
+		// å¸¦æƒé‡çŸ©é˜µæ±‚å¯¹æ•°
+		/*cvLog(fsA, fsA);
 		cvLog(fsB, fsB);
+		cvLog(fsC, fsC);*/
+		
+
+		cvLog(fsA, fsA);
+		cvConvertScale(fsA, fsA, rate);
+		cvLog(fsB, fsB);
+		cvConvertScale(fsB, fsB, rate);
 		cvLog(fsC, fsC);
+		cvConvertScale(fsC, fsC, rate);
 
 		// Divide retinex image, weight accordingly and recombine
-		// ½«RetinexÍ¼ÏñÇĞ·ÖÎªÈı¸öÊı×é£¬°´ÕÕÈ¨ÖØºÍÑÕÉ«ÔöÒæÖØĞÂ×éºÏ
+		// å°†Retinexå›¾åƒåˆ‡åˆ†ä¸ºä¸‰ä¸ªæ•°ç»„ï¼ŒæŒ‰ç…§æƒé‡å’Œé¢œè‰²å¢ç›Šé‡æ–°ç»„åˆ
 		cvSplit(fA, fsD, fsE, fsF, NULL);
 
 		cvMul(fsD, fsA, fsD, color_gain);
@@ -653,11 +753,14 @@ void Msrcr::MultiScaleRetinexCR(IplImage *img, vector<double> weights, vector<do
 	}
 
 	// Restore
-	// »Ö¸´Í¼Ïñ
-	cvConvertScale(fA, img, 110, 110);//soybean
+	// æ¢å¤å›¾åƒ
+	cvConvertScale(fA, img, 110, 110);//img=110*fA+110
 
+	/*cv::Mat m1 = cv::cvarrToMat(img);
+	cv::imwrite("D://VS_Project//12.bmp", m1);//æ·»åŠ åº“imgcodecs æ‰èƒ½ç”¨æ­¤å‡½æ•°
+	*/
 // Release temp images
-// ÊÍ·Å»º´æÍ¼Ïñ
+// é‡Šæ”¾ç¼“å­˜å›¾åƒ
 	cvReleaseImage(&fA);
 	cvReleaseImage(&fB);
 	cvReleaseImage(&fC);
@@ -667,23 +770,24 @@ void Msrcr::MultiScaleRetinexCR(IplImage *img, vector<double> weights, vector<do
 	cvReleaseImage(&fsD);
 	cvReleaseImage(&fsE);
 	cvReleaseImage(&fsF);
+        cvReleaseImage(&ImgGray);
 }
 
 
 
 /*===========================================================
- * º¯Êı£ºMultiScaleRetinexCR
- * ËµÃ÷£ºMSRCRËã·¨£¬MSRËã·¨¼ÓÉÏÑÕÉ«ĞŞ¸´¡£Ô­Í¼ÏñºÍÒ»ÏµÁĞ±»ÂË²¨µÄÍ¼Ïñ×ª»»µ½¶ÔÊıÓò£¬²¢Óë´øÈ¨ÖØµÄÔ­Í¼Ïñ×ö¼õÔËËã¡£
- * Í¨³£Çé¿öÏÂ£¬Èı¸öÈ¨ÖØ·¶Î§Ñ¡ÔñµÍ¡¢ÖĞ¡¢¸ß±ê×¼Æ«²î£»Ö®ºó£¬ÑÕÉ«ĞŞ¸´È¨ÖØÓ¦ÓÃÓÚÃ¿¸öÑÕÉ«Í¨µÀÖĞ£»
+ * å‡½æ•°ï¼šMultiScaleRetinexCR
+ * è¯´æ˜ï¼šMSRCRç®—æ³•ï¼ŒMSRç®—æ³•åŠ ä¸Šé¢œè‰²ä¿®å¤ã€‚åŸå›¾åƒå’Œä¸€ç³»åˆ—è¢«æ»¤æ³¢çš„å›¾åƒè½¬æ¢åˆ°å¯¹æ•°åŸŸï¼Œå¹¶ä¸å¸¦æƒé‡çš„åŸå›¾åƒåšå‡è¿ç®—ã€‚
+ * é€šå¸¸æƒ…å†µä¸‹ï¼Œä¸‰ä¸ªæƒé‡èŒƒå›´é€‰æ‹©ä½ã€ä¸­ã€é«˜æ ‡å‡†åå·®ï¼›ä¹‹åï¼Œé¢œè‰²ä¿®å¤æƒé‡åº”ç”¨äºæ¯ä¸ªé¢œè‰²é€šé“ä¸­ï¼›
  *
- * ²ÎÊı£º
- *   Mat src: ÊäÈëÍ¼Ïñ
- *   Mat &dst: Êä³öÍ¼Ïñ
- *   double sigma: ¸ßË¹ºË±ê×¼Æ«²î
- *   int gain: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÔöÒæ
- *   int offset: Í¼ÏñÏñËØÖµ¸Ä±ä·¶Î§µÄÆ«ÒÆÁ¿
- *   double restoration_factor: ¿ØÖÆÑÕÉ«ĞŞ¸´µÄ·ÇÏßĞÔ
- *   double color_gain: ¿ØÖÆÑÕÉ«ĞŞ¸´ÔöÒæ
+ * å‚æ•°ï¼š
+ *   Mat src: è¾“å…¥å›¾åƒ
+ *   Mat &dst: è¾“å‡ºå›¾åƒ
+ *   double sigma: é«˜æ–¯æ ¸æ ‡å‡†åå·®
+ *   int gain: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„å¢ç›Š
+ *   int offset: å›¾åƒåƒç´ å€¼æ”¹å˜èŒƒå›´çš„åç§»é‡
+ *   double restoration_factor: æ§åˆ¶é¢œè‰²ä¿®å¤çš„éçº¿æ€§
+ *   double color_gain: æ§åˆ¶é¢œè‰²ä¿®å¤å¢ç›Š
  * --------------------------------------------------------
  * Summary:
  * Multiscale retinex restoration with color restoration.  The image and a set of
@@ -706,7 +810,7 @@ void Msrcr::MultiScaleRetinexCR(Mat src, Mat &dst, vector<double> weights, vecto
 	int gain, int offset, double restoration_factor, double color_gain)
 {
 	IplImage tmp_ipl;
-	tmp_ipl = IplImage(src);
+	tmp_ipl = cvIplImage(src);
 	MultiScaleRetinexCR(&tmp_ipl, weights, sigmas, gain, offset, restoration_factor, color_gain);
 	dst = cvarrToMat(&tmp_ipl);
 }
