@@ -1,4 +1,3 @@
-
 #include "stdio.h"
 #include <iostream>
 #include <opencv2/core/core.hpp>
@@ -15,7 +14,7 @@ using namespace std;
 using namespace cv;
 
 string image_format = ".bmp"; // the format of the original images
-string image_names = "/home/Linux Version/path.txt"; // this algorithm processes the images according to images' name in this file.
+string image_names = "/home/lw/Desktop/Linux Version/path.txt"; // this algorithm processes the images according to images' name in this file.
 
 
 int Line_number = 2;//the number of images 
@@ -28,7 +27,7 @@ int main()
 
 	for (int Line = 0; Line < Line_number; Line++)
 	{
-		string root_img_path = "/home/Linux Version/src/"; // the original images are saved in this file
+		string root_img_path = "/home/lw/Desktop/Linux Version/src/"; // the original images are saved in this file
 
 		string img_names = ReadLine(image_names, Line + 1);
 		string file_path = create_file(img_names, root_img_path);
