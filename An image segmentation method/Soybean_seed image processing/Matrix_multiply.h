@@ -24,5 +24,3 @@ Mat Matrix_multiply(Mat binary_img_Mat, Mat water_img_Mat)
 	return result;
 
 }
-
-
