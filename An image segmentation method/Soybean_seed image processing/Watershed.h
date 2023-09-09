@@ -12,7 +12,7 @@ int thresh_callback_particular_for_watered(Mat water_binary_result,  string file
 	vector<vector<Point>>contours;
 	vector<Vec4i>hierarchy;
 
-	///转化成灰度图像并进行平滑
+	///杞寲鎴愮伆搴﹀浘鍍忓苟杩涜骞虫粦
 	cvtColor(water_binary_result, src_gray, CV_BGR2GRAY);
 	int thresh = myOtsu(src_gray);
 
