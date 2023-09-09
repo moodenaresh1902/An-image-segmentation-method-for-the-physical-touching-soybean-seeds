@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #ifndef _MSRCR_H_
 #define _MSRCR_H_
 
