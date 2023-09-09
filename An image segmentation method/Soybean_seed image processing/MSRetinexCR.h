@@ -42,7 +42,7 @@ int MSRetinexCR(string path, string image_save_path,string file_path)
 	img = imread(path);
 	if (img.empty())
 	{
-		cout << "未读取到" << path << "这张图片，请查看此图是否已保存在相应的文件夹中！" << endl;
+		cout << "鏈鍙栧埌" << path << "杩欏紶鍥剧墖锛岃鏌ョ湅姝ゅ浘鏄惁宸蹭繚瀛樺湪鐩稿簲鐨勬枃浠跺す涓紒" << endl;
 
 	}
 
@@ -56,4 +56,3 @@ int MSRetinexCR(string path, string image_save_path,string file_path)
 
 	return 0;
 }
-
