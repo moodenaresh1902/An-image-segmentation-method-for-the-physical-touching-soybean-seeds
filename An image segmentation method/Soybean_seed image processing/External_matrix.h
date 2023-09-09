@@ -116,7 +116,7 @@ int thresh_callback(string binary_src_path, string MSRCR_src_path, string file_p
 		if ((boundRect[i].width > 95 && boundRect[i].height > 95) || (boundRect[i].width > 115 && boundRect[i].height > 95) || (boundRect[i].width > 95 && boundRect[i].height > 115))
 		{
 			// processing the physical touching seeds on the masking image
-			if (boundRect[i].width > 200 || boundRect[i].height > 200)
+			if (boundRect[i].width > 300 || boundRect[i].height > 300)
 			{
 				MSRCR_src.copyTo(dst, mask);
 
@@ -125,7 +125,7 @@ int thresh_callback(string binary_src_path, string MSRCR_src_path, string file_p
 				// morphological operation for processing the physical touching seeds on the masking image
 				{
 					Mat element = getStructuringElement(MORPH_RECT, Size(13, 13)); // kernel size
-					morphologyEx(mask_binary, mask_binary, 0, element);
+					morphologyEx(mask_binary, mask_binary, MORPH_RECT, element);
                     count = thresh_callback_open_operation(mask_binary, MSRCR_src, file_path, count);
 				}
 
