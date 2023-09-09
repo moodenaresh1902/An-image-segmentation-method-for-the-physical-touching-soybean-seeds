@@ -3,8 +3,6 @@
 #include "string"
 #include "sys/stat.h"
 #include <iostream>
-#include <direct.h>
-#include <io.h>
 #include <string>
 
 using namespace std;
@@ -21,7 +19,7 @@ string create_files(string folderPath, string FolderPath)
 	return str.append("/");
 }
 
-//´´½¨ÎÄ¼ş¼Ğ±£´æÍ¼Ïñ
+//åˆ›å»ºæ–‡ä»¶å¤¹ä¿å­˜å›¾åƒ
 string create_file(string img_name, string root_img_path)
 {
 	string folderPath = root_img_path;
